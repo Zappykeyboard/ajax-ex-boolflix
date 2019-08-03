@@ -15,6 +15,20 @@ $(document).ready(function () {
   var movieContext, resultsArr;
 
 
+  // funzione per aggiungere le stelline  nell'html
+  function addStars(score, id) {
+    //aggiungo le stelline piene
+    for (var i = 1; i <= score; i++) {
+      $("ul[data-ID=" + id + "] .score-cont").append("<i class='fas fa-star'><i>");
+    }
+    //aggiungo le stelline vuote
+    for (var i = 1; i <= (5 - score); i++){
+      $("ul[data-ID=" + id + "] .score-cont").append("<i class='far fa-star'><i>");
+    }
+
+  }
+
+
   $("#button-search").on("click", function () {
 
     //prelevo il testo dalla search bar per la ricerca
@@ -33,20 +47,21 @@ $(document).ready(function () {
 
           //ciclo tra i risultati
           for (var i = 0; i < resultsArr.length; i++) {
+            var roundedScore = Math.ceil(resultsArr[i].vote_average / 2);
 
             //i valori da inserire nell'HTML
             movieContext = {
               title: resultsArr[i].title,
               originalTitle: resultsArr[i].original_title,
               language: resultsArr[i].original_language,
-              ranking: function () {
-
-                //arrotondo il punteggio
-                return Math.ceil(resultsArr[i].vote_average / 2);
-              }
+              itemID: resultsArr[i].id,
+              ranking: roundedScore
             }
 
+            //aggiungo il film
             $("#movies-list").append(movieTemplate(movieContext));
+            //aggiungo le stelline
+            addStars(roundedScore, resultsArr[i].id);
           }
 
         }

@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
   <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/flag-icon.min.css">
+  <link rel="stylesheet" href="./css/flag-icon.css">
   <link rel="stylesheet" href="./css/style.css">
   <title>Boolflix</title>
 </head>
@@ -16,11 +16,11 @@
   <a href="https://github.com/lipis/flag-icon-css"> icons by: lipis (https://github.com/lipis/flag-icon-css)</a>
   <script id="movie-template" type="text/x-handlebars-template">
     <li>
-    <ul>
+    <ul data-ID="{{itemID}}">
       <li>Titolo: {{title}}</li>
       <li>Titolo originale: {{originalTitle}}</li>
-      <li>Lingua originale: {{language}}</li>
-      <li>Voto: {{ranking}}/5</li>
+      <li>Lingua originale: {{language}} <span class="flag-icon flag-icon-{{language}}"></span> </li>
+      <li>Voto: <span class="score-cont"></span> {{ranking}}/5</li>
     </ul>
   </li>
   </script>
