@@ -14,10 +14,10 @@
   <script id="movie-template" type="text/x-handlebars-template">
     <li>
     <ul>
-      <li>{{title}}</li>
-      <li>{{originalTitle}}</li>
-      <li>{{language}}</li>
-      <li>{{ranking}}</li>
+      <li>Titolo: {{title}}</li>
+      <li>Titolo originale: {{originalTitle}}</li>
+      <li>Lingua originale: {{language}}</li>
+      <li>Voto: {{ranking}}</li>
     </ul>
   </li>
   </script>
@@ -25,8 +25,8 @@
 
   <!--form per cercare i film-->
   <form action="">
-    <input type="week" name="" id="searchbar" placeholder="inserisci parole chiave">
-    <input type="button" value="Cerca i film!">
+    <input type="week" name="" id="search-bar" placeholder="inserisci parole chiave">
+    <input type="button" value="Cerca i film!" id="button-search">
   </form>
 
   <!--lista-->
