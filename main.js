@@ -5,7 +5,7 @@ $(document).ready(function () {
   var APIKEY = "122f548a0686e7e33947815fd89b1f76"
 
   //parametri url
-  var APIParams = { 
+  var APIParams = {
     api_key: APIKEY,
     language: "it"
   };
@@ -25,27 +25,29 @@ $(document).ready(function () {
       method: "GET",
       data: APIParams,
       success: function (data, status) {
-        if (data.results){
+        if (data.results) {
 
           $("#movies-list").empty();
 
           resultsArr = data.results;
 
           //ciclo tra i risultati
-          for (var i = 0; i < resultsArr.length; i++){
-          movieContext = {
-            title: resultsArr[i].title,
-            originalTitle: resultsArr[i].original_title,
-            language: resultsArr[i].original_language,
-            ranking: function() {
+          for (var i = 0; i < resultsArr.length; i++) {
 
-              //arrotondo il punteggio
-              return Math.ceil(resultsArr[i].vote_average / 2);
+            //i valori da inserire nell'HTML
+            movieContext = {
+              title: resultsArr[i].title,
+              originalTitle: resultsArr[i].original_title,
+              language: resultsArr[i].original_language,
+              ranking: function () {
+
+                //arrotondo il punteggio
+                return Math.ceil(resultsArr[i].vote_average / 2);
+              }
             }
-          }
 
-          $("#movies-list").append(movieTemplate(movieContext));
-        }
+            $("#movies-list").append(movieTemplate(movieContext));
+          }
 
         }
       },
