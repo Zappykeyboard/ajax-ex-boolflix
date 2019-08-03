@@ -11,7 +11,28 @@
   <title>Boolflix</title>
 </head>
 <body>
+  <script id="movie-template" type="text/x-handlebars-template">
+    <li>
+    <ul>
+      <li>{{title}}</li>
+      <li>{{originalTitle}}</li>
+      <li>{{language}}</li>
+      <li>{{ranking}}</li>
+    </ul>
+  </li>
+  </script>
   
+
+  <!--form per cercare i film-->
+  <form action="">
+    <input type="week" name="" id="searchbar" placeholder="inserisci parole chiave">
+    <input type="button" value="Cerca i film!">
+  </form>
+
+  <!--lista-->
+  <ul id="movies-list">
+
+  </ul>
   <script src="main.js"></script>
 </body>
 </html>
