@@ -37,7 +37,11 @@ $(document).ready(function () {
             title: resultsArr[i].title,
             originalTitle: resultsArr[i].original_title,
             language: resultsArr[i].original_language,
-            ranking: resultsArr[i].vote_average
+            ranking: function() {
+
+              //arrotondo il punteggio
+              return Math.ceil(resultsArr[i].vote_average / 2);
+            }
           }
 
           $("#movies-list").append(movieTemplate(movieContext));
