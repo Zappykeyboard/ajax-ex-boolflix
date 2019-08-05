@@ -1,5 +1,8 @@
 $(document).ready(function () {
 
+  //pulisco il campo di testo
+  $("#search-bar").val("")
+
   //url e chiave API
   var APIURL = "https://api.themoviedb.org/3/search/multi";
   var APIKEY = "122f548a0686e7e33947815fd89b1f76"
@@ -18,7 +21,7 @@ $(document).ready(function () {
 
   //funzione per ricevere la lista dalla API; 
   //accetta stringa; ritorna array
-  function retrieveList(query){
+  function retrieveList(query) {
 
     APIParams.query = query;
 
@@ -43,13 +46,16 @@ $(document).ready(function () {
 
   //funzione per inserire gli elementi html;
   //accetta array di oggetti
-  function appendList(list){
+  function appendList(list) {
     var roundedScore, iteration;
+    var posterBaseURL = "https://image.tmdb.org/t/p/w185/";
+    
+
 
     //pulisco la lista esistente
     $("#movies-list").empty();
 
-    
+
     for (var i = 0; i < list.length; i++) {
 
       iteration = list[i];
@@ -59,15 +65,15 @@ $(document).ready(function () {
 
       //i valori da inserire nell'HTML
       movieContext = {
-        title: function(){
-          if (iteration.title){
+        title: function () {
+          if (iteration.title) {
             return iteration.title;
           } else {
-            return iteration.name; 
+            return iteration.name;
           }
         },
-        originalTitle: function(){
-          if(iteration.original_title){
+        originalTitle: function () {
+          if (iteration.original_title) {
             return iteration.original_title;
           } else {
             return iteration.original_name
@@ -75,7 +81,8 @@ $(document).ready(function () {
         },
         language: iteration.original_language,
         itemID: iteration.id,
-        ranking: roundedScore
+        ranking: roundedScore,
+        imgURL: posterBaseURL + iteration.poster_path
       }
 
       //aggiungo il film
@@ -93,7 +100,7 @@ $(document).ready(function () {
       $("ul[data-ID=" + id + "] .score-cont").append("<i class='fas fa-star'><i>");
     }
     //aggiungo le stelline vuote
-    for (var i = 1; i <= (5 - score); i++){
+    for (var i = 1; i <= (5 - score); i++) {
       $("ul[data-ID=" + id + "] .score-cont").append("<i class='far fa-star'><i>");
     }
 
@@ -105,11 +112,12 @@ $(document).ready(function () {
 
 
 
-
+  //funzione per avviare la ricerca
   $("#button-search").on("click", function () {
 
-     retrieveList($("#search-bar").val());
-
+    if ($("#search-bar").val()) {
+      retrieveList($("#search-bar").val());
+    }
   })
 
 
