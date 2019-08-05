@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
   //url e chiave API
-  var APIURL = "https://api.themoviedb.org/3/search/movie";
+  var APIURL = "https://api.themoviedb.org/3/search/multi";
   var APIKEY = "122f548a0686e7e33947815fd89b1f76"
 
   //parametri url
@@ -14,6 +14,77 @@ $(document).ready(function () {
   var movieTemplate = Handlebars.compile($("#movie-template").html())
   var movieContext, resultsArr;
 
+
+
+  //funzione per ricevere la lista dalla API; 
+  //accetta stringa; ritorna array
+  function retrieveList(query){
+
+    APIParams.query = query;
+
+    $.ajax({
+      url: APIURL,
+      method: "GET",
+      data: APIParams,
+      success: function (data, status) {
+        if (data.results) {
+
+          appendList(data.results);
+
+        }
+      },
+      error: function (err) {
+        console.log(err)
+      }
+
+    })
+
+  }
+
+  //funzione per inserire gli elementi html;
+  //accetta array di oggetti
+  function appendList(list){
+    var roundedScore, iteration;
+
+    //pulisco la lista esistente
+    $("#movies-list").empty();
+
+    
+    for (var i = 0; i < list.length; i++) {
+
+      iteration = list[i];
+
+      //arrotondo il punteggio
+      roundedScore = Math.ceil(iteration.vote_average / 2);
+
+      //i valori da inserire nell'HTML
+      movieContext = {
+        title: function(){
+          if (iteration.title){
+            return iteration.title;
+          } else {
+            return iteration.name; 
+          }
+        },
+        originalTitle: function(){
+          if(iteration.original_title){
+            return iteration.original_title;
+          } else {
+            return iteration.original_name
+          }
+        },
+        language: iteration.original_language,
+        itemID: iteration.id,
+        ranking: roundedScore
+      }
+
+      //aggiungo il film
+      $("#movies-list").append(movieTemplate(movieContext));
+      //aggiungo le stelline
+      addStars(roundedScore, iteration.id);
+    }
+
+  }
 
   // funzione per aggiungere le stelline  nell'html
   function addStars(score, id) {
@@ -29,50 +100,15 @@ $(document).ready(function () {
   }
 
 
+
+
+
+
+
+
   $("#button-search").on("click", function () {
 
-    //prelevo il testo dalla search bar per la ricerca
-    APIParams.query = $("#search-bar").val();
-
-    $.ajax({
-      url: APIURL,
-      method: "GET",
-      data: APIParams,
-      success: function (data, status) {
-        if (data.results) {
-
-          $("#movies-list").empty();
-
-          resultsArr = data.results;
-
-          //ciclo tra i risultati
-          for (var i = 0; i < resultsArr.length; i++) {
-            var roundedScore = Math.ceil(resultsArr[i].vote_average / 2);
-
-            //i valori da inserire nell'HTML
-            movieContext = {
-              title: resultsArr[i].title,
-              originalTitle: resultsArr[i].original_title,
-              language: resultsArr[i].original_language,
-              itemID: resultsArr[i].id,
-              ranking: roundedScore
-            }
-
-            //aggiungo il film
-            $("#movies-list").append(movieTemplate(movieContext));
-            //aggiungo le stelline
-            addStars(roundedScore, resultsArr[i].id);
-          }
-
-        }
-      },
-      error: function (err) {
-        console.log(err)
-      }
-
-    })
-
-
+     retrieveList($("#search-bar").val());
 
   })
 
