@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,34 +13,54 @@
   <link rel="stylesheet" href="./css/style.css">
   <title>Boolflix</title>
 </head>
+
 <body>
-  <a href="https://github.com/lipis/flag-icon-css">Flag icons by: lipis (https://github.com/lipis/flag-icon-css)</a>
   <script id="movie-template" type="text/x-handlebars-template">
-    <li>
-      <img src="{{imgURL}}" alt="{{title}}">
-    <ul data-ID="{{itemID}}">
+
+     <!--singolo film-->
+  <div class="movie-box">
+    <!--locandina-->
+    <img class="movie-img" src="{{imgURL}}" alt="{{title}}" >
+    <!--info-->
+    <ul class="movie-info" data-ID="{{itemID}}">
       <li>Titolo: {{title}}</li>
       <li>Titolo originale: {{originalTitle}}</li>
       <li>Lingua originale: {{language}} <span class="flag-icon flag-icon-{{language}}"></span> </li>
       <li>Voto: <span class="score-cont"></span> {{ranking}}/5</li>
     </ul>
-  </li>
+  </div>
+
   </script>
-  
-  
 
-  <!--form per cercare i film-->
-  <form action="">
-    <input type="week" name="" id="search-bar" placeholder="inserisci parole chiave">
-    <input type="button" value="Cerca i film!" id="button-search">
-  </form>
 
-  <!--lista-->
-  <ul id="movies-list">
+  <header>
+    <div class="header-container">
+      <div id="logo">BOOLFLIX</div>
+      <div id="search">
+        <!--form per cercare i film-->
+        <form action="">
+          <input type="week" name="" id="search-bar" placeholder="inserisci parole chiave">
+          <input type="button" value="Cerca i film!" id="button-search">
+        </form>
+      </div>
+    </div>
+  </header>
 
-  </ul>
+
+
+  <main id="main-content">
+    <!--lista-->
+    <div id="movies-list"></div>
+  </main>
+
+
+
+
+  <footer id="footer">
+    <a href="https://github.com/lipis/flag-icon-css">Flag icons by: lipis (https://github.com/lipis/flag-icon-css)</a>
+  </footer>
+
   <script src="main.js"></script>
-  
 </body>
 
 </html>

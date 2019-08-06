@@ -48,7 +48,7 @@ $(document).ready(function () {
   //accetta array di oggetti
   function appendList(list) {
     var roundedScore, iteration;
-    var posterBaseURL = "https://image.tmdb.org/t/p/w185/";
+    var posterBaseURL = "https://image.tmdb.org/t/p/w342/";
     
 
 
@@ -82,8 +82,11 @@ $(document).ready(function () {
         language: iteration.original_language,
         itemID: iteration.id,
         ranking: roundedScore,
+        //TODO: aggiungere caso in cui iteration.poster_path === null
         imgURL: posterBaseURL + iteration.poster_path
       }
+
+
 
       //aggiungo il film
       $("#movies-list").append(movieTemplate(movieContext));

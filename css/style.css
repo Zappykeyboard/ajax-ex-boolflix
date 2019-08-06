@@ -1,0 +1,61 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+}
+
+.header-container{
+  width: 100%;
+  min-height: 10vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: black
+}
+
+#logo{
+  color: red;
+  font-weight: bolder;
+  font-style: italic;
+  font-size: 1.5rem;
+}
+
+#main-content{
+  background: rgb(58, 55, 55);
+  min-height: 80vh;
+}
+
+#movies-list{
+  width: 100%;
+  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center
+}
+
+.movie-box{
+  padding: 20px;
+  width: 342px;
+}
+
+.movie-img{
+  height: 480px;
+}
+
+
+.movie-info{
+  color: white;
+  list-style: none;
+}
+
+#footer{
+  text-align: center;
+  background: black;
+  min-height: 10vh
+}
+
+#footer a {
+  text-decoration: none;
+  color: white;
+}
