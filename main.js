@@ -83,13 +83,19 @@ $(document).ready(function () {
         itemID: iteration.id,
         ranking: roundedScore,
         //TODO: aggiungere caso in cui iteration.poster_path === null
-        imgURL: posterBaseURL + iteration.poster_path
+        imgURL: function(){
+          if(iteration.poster_path){
+           return posterBaseURL + iteration.poster_path
+          } else return "img/coming_soon_poster.jpg" 
+          
+        } 
       }
 
 
 
       //aggiungo il film
       $("#movies-list").append(movieTemplate(movieContext));
+
       //aggiungo le stelline
       addStars(roundedScore, iteration.id);
     }
@@ -110,24 +116,19 @@ $(document).ready(function () {
   }
 
 
-
-
-
-
-
   //funzione per avviare la ricerca
   $("#button-search").on("click", function () {
 
     if ($("#search-bar").val()) {
       retrieveList($("#search-bar").val());
     }
-  })
+  });
 
   //stessa funzione, ma con il tasto INVIO
   $("#search-bar").keydown(function(){
 
     if (event.which == 13){
-      
+
       event.preventDefault();
 
       if ($("#search-bar").val()) {
@@ -137,8 +138,6 @@ $(document).ready(function () {
     }
 
   });
-
-
 
 
 });
