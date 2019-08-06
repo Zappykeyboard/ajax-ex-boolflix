@@ -123,6 +123,20 @@ $(document).ready(function () {
     }
   })
 
+  //stessa funzione, ma con il tasto INVIO
+  $("#search-bar").keydown(function(){
+
+    if (event.which == 13){
+      
+      event.preventDefault();
+
+      if ($("#search-bar").val()) {
+        retrieveList($("#search-bar").val());
+      }
+
+    }
+
+  });
 
 
 
