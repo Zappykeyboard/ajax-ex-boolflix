@@ -1,17 +1,100 @@
 $(document).ready(function () {
 
   //pulisco il campo di testo
-  $("#search-bar").val("")
+  $("#search-bar").val("marvel");
 
-  //url e chiave API
-  var APIURL = "https://api.themoviedb.org/3/search/multi";
-  var APIKEY = "122f548a0686e7e33947815fd89b1f76"
+  //chiave API
+  var APIKEY = "122f548a0686e7e33947815fd89b1f76";
+  //url ricerca film e serie TV
+  var APIURL = "https://api.themoviedb.org/3/";
+
+  //tutti i generi
+  var generesArray = [
+    {
+      "id": 28,
+      "name": "Action"
+    },
+    {
+      "id": 12,
+      "name": "Adventure"
+    },
+    {
+      "id": 16,
+      "name": "Animation"
+    },
+    {
+      "id": 35,
+      "name": "Comedy"
+    },
+    {
+      "id": 80,
+      "name": "Crime"
+    },
+    {
+      "id": 99,
+      "name": "Documentary"
+    },
+    {
+      "id": 18,
+      "name": "Drama"
+    },
+    {
+      "id": 10751,
+      "name": "Family"
+    },
+    {
+      "id": 14,
+      "name": "Fantasy"
+    },
+    {
+      "id": 36,
+      "name": "History"
+    },
+    {
+      "id": 27,
+      "name": "Horror"
+    },
+    {
+      "id": 10402,
+      "name": "Music"
+    },
+    {
+      "id": 9648,
+      "name": "Mystery"
+    },
+    {
+      "id": 10749,
+      "name": "Romance"
+    },
+    {
+      "id": 878,
+      "name": "Science Fiction"
+    },
+    {
+      "id": 10770,
+      "name": "TV Movie"
+    },
+    {
+      "id": 53,
+      "name": "Thriller"
+    },
+    {
+      "id": 10752,
+      "name": "War"
+    },
+    {
+      "id": 37,
+      "name": "Western"
+    }
+  ]
+
 
   //parametri url
   var APIParams = {
     api_key: APIKEY,
-    language: "it"
+    language: "it",
   };
+  var queryParams = {};
 
   //template handlebars
   var movieTemplate = Handlebars.compile($("#movie-template").html())
@@ -21,15 +104,16 @@ $(document).ready(function () {
 
   //funzione per ricevere la lista dalla API; 
   //accetta stringa; ritorna array
-  function retrieveList(query) {
+  function retrieveList(queryStr) {
 
-    APIParams.query = query;
+    queryParams.query= queryStr;
+    $.extend(queryParams, APIParams);
 
     $.ajax({
-      url: APIURL,
+      url: APIURL + "search/multi",
       method: "GET",
-      data: APIParams,
-      success: function (data, status) {
+      data: queryParams,
+      success: function (data) {
         if (data.results) {
 
           appendList(data.results);
@@ -49,8 +133,6 @@ $(document).ready(function () {
   function appendList(list) {
     var roundedScore, iteration;
     var posterBaseURL = "https://image.tmdb.org/t/p/w342/";
-    
-
 
     //pulisco la lista esistente
     $("#movies-list").empty();
@@ -62,6 +144,7 @@ $(document).ready(function () {
 
       //arrotondo il punteggio
       roundedScore = Math.ceil(iteration.vote_average / 2);
+
 
       //i valori da inserire nell'HTML
       movieContext = {
@@ -82,13 +165,12 @@ $(document).ready(function () {
         language: iteration.original_language,
         itemID: iteration.id,
         ranking: roundedScore,
-        //TODO: aggiungere caso in cui iteration.poster_path === null
-        imgURL: function(){
-          if(iteration.poster_path){
-           return posterBaseURL + iteration.poster_path
-          } else return "img/coming_soon_poster.jpg" 
-          
-        } 
+        imgURL: function () {
+          if (iteration.poster_path) {
+            return posterBaseURL + iteration.poster_path
+          } else return "img/coming_soon_poster.jpg"
+        },
+        mediaType: iteration.media_type
       }
 
 
@@ -98,8 +180,11 @@ $(document).ready(function () {
 
       //aggiungo le stelline
       addStars(roundedScore, iteration.id);
+
     }
 
+      //aggiungo gli attori
+      appendActors()
   }
 
   // funzione per aggiungere le stelline  nell'html
@@ -115,6 +200,53 @@ $(document).ready(function () {
 
   }
 
+  //recupero i primi 5 attori di ogni elemento, e li appendo
+  function appendActors(){
+    var mediaID, mediaType, searchURL;
+    
+
+
+    $(".movie-info").each(function(){
+
+      var jQueryContext = $(this);
+
+      // ID e tipo di media dell'oggetto
+      mediaID = jQueryContext.attr("data-ID");
+      mediaType = jQueryContext.attr("data-media");
+
+      //compongo l'url
+      searchURL = APIURL + mediaType + "/" + mediaID + "/credits";
+
+      //uso il tipo di media e l'ID per trovare i credits
+        $.ajax({
+        url: searchURL,
+        method: "GET",
+        data: APIParams,
+        success: function(data){
+
+          if (data.cast){
+            
+            //riduco a 5  gli elementi
+            data.cast.splice(5);
+
+            var castArr = [];
+
+            for (var i = 0; i < data.cast.length; i++){
+            castArr.push(data.cast[i].name);
+            }
+
+            jQueryContext.find(".actors-cont").text(castArr.join(", "));
+          }
+        },
+        error: function (err) {
+          console.log(err)
+        }
+        })
+
+       
+        
+    });
+  }
 
   //funzione per avviare la ricerca
   $("#button-search").on("click", function () {
@@ -125,9 +257,9 @@ $(document).ready(function () {
   });
 
   //stessa funzione, ma con il tasto INVIO
-  $("#search-bar").keydown(function(){
+  $("#search-bar").keydown(function () {
 
-    if (event.which == 13){
+    if (event.which == 13) {
 
       event.preventDefault();
 

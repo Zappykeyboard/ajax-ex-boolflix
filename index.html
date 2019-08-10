@@ -22,16 +22,18 @@
     <!--locandina-->
     <img class="movie-img" src="{{imgURL}}" alt="{{title}}" >
     <!--info-->
-    <ul class="movie-info" data-ID="{{itemID}}">
+    <ul class="movie-info" data-ID="{{itemID}}" data-media="{{mediaType}}">
       <li> <strong>Titolo</strong>: {{title}}</li>
       <li><strong>Titolo originale</strong>: {{originalTitle}}</li>
       <li><strong>Lingua originale</strong>: <span class="flag-icon flag-icon-{{language}}"></span> </li>
       <li><strong>Voto</strong>: <span class="score-cont"></span> {{ranking}}/5</li>
+      <li><strong>Attori</strong>: <span class="actors-cont"></span></li>
     </ul>
   </div>
 
   </script>
 
+  
   <header>
     <div class="header-container">
       <div id="logo">BOOLFLIX</div>
