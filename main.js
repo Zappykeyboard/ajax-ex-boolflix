@@ -8,86 +8,9 @@ $(document).ready(function () {
   //url ricerca film e serie TV
   var APIURL = "https://api.themoviedb.org/3/";
 
-  //tutti i generi
-  var generesArray = [
-    {
-      "id": 28,
-      "name": "Action"
-    },
-    {
-      "id": 12,
-      "name": "Adventure"
-    },
-    {
-      "id": 16,
-      "name": "Animation"
-    },
-    {
-      "id": 35,
-      "name": "Comedy"
-    },
-    {
-      "id": 80,
-      "name": "Crime"
-    },
-    {
-      "id": 99,
-      "name": "Documentary"
-    },
-    {
-      "id": 18,
-      "name": "Drama"
-    },
-    {
-      "id": 10751,
-      "name": "Family"
-    },
-    {
-      "id": 14,
-      "name": "Fantasy"
-    },
-    {
-      "id": 36,
-      "name": "History"
-    },
-    {
-      "id": 27,
-      "name": "Horror"
-    },
-    {
-      "id": 10402,
-      "name": "Music"
-    },
-    {
-      "id": 9648,
-      "name": "Mystery"
-    },
-    {
-      "id": 10749,
-      "name": "Romance"
-    },
-    {
-      "id": 878,
-      "name": "Science Fiction"
-    },
-    {
-      "id": 10770,
-      "name": "TV Movie"
-    },
-    {
-      "id": 53,
-      "name": "Thriller"
-    },
-    {
-      "id": 10752,
-      "name": "War"
-    },
-    {
-      "id": 37,
-      "name": "Western"
-    }
-  ]
-
+  //conservo la lista dei generi dopo averla recuperata dalla API
+  //questo riduce il numero di API call
+  var genresCache = [];
 
   //parametri url
   var APIParams = {
@@ -95,6 +18,50 @@ $(document).ready(function () {
     language: "it",
   };
   var queryParams = {};
+
+  //recupero i generi immediatamente, da momento che presumibilmente non cambiano molto spesso
+  (function () {
+
+    $.ajax({
+      url: APIURL + "genre/movie/list",
+      method: "GET",
+      data: APIParams,
+      success: function (data) {
+
+        if (data.genres) {
+          for (var i = 0; i < data.genres.length; i++) {
+            genresCache.push(data.genres[i]);
+          }
+          console.log(genresCache);
+        }
+      },
+      error: function (err) {
+        console.log(err)
+      }
+
+    });
+
+
+    $.ajax({
+      url: APIURL + "genre/tv/list",
+      method: "GET",
+      data: APIParams,
+      success: function (data) {
+
+        if (data.genres) {
+          for (var i = 0; i < data.genres.length; i++) {
+            genresCache.push(data.genres[i]);
+          } console.log(genresCache)
+        }
+      },
+      error: function (err) {
+        console.log(err)
+      }
+
+    });
+
+
+  })();
 
   //template handlebars
   var movieTemplate = Handlebars.compile($("#movie-template").html())
@@ -106,7 +73,7 @@ $(document).ready(function () {
   //accetta stringa; ritorna array
   function retrieveList(queryStr) {
 
-    queryParams.query= queryStr;
+    queryParams.query = queryStr;
     $.extend(queryParams, APIParams);
 
     $.ajax({
@@ -131,7 +98,7 @@ $(document).ready(function () {
   //funzione per inserire gli elementi html;
   //accetta array di oggetti
   function appendList(list) {
-    var roundedScore, iteration;
+    var roundedScore, genres, iteration;
     var posterBaseURL = "https://image.tmdb.org/t/p/w342/";
 
     //pulisco la lista esistente
@@ -144,6 +111,10 @@ $(document).ready(function () {
 
       //arrotondo il punteggio
       roundedScore = Math.ceil(iteration.vote_average / 2);
+
+
+      genres = translateGenres(iteration.genre_ids);
+      console.log(genres);
 
 
       //i valori da inserire nell'HTML
@@ -170,6 +141,7 @@ $(document).ready(function () {
             return posterBaseURL + iteration.poster_path
           } else return "img/coming_soon_poster.jpg"
         },
+        genres: genres.join(", "),
         mediaType: iteration.media_type
       }
 
@@ -183,8 +155,35 @@ $(document).ready(function () {
 
     }
 
-      //aggiungo gli attori
-      appendActors()
+    //aggiungo gli attori
+    appendActors()
+  }
+
+
+  //restituisce l'array di generi in italiano
+  function translateGenres(genresIDs) {
+    var theGenre;
+    var translatedArr = [];
+
+
+    if (genresIDs && genresCache) {
+
+      for (var i = 0; i < genresIDs.length; i++) {
+
+        //trovo l'id corrispondente, confrontandolo con la lista di generi pertinente
+        theGenre = genresCache.find(element =>
+          element.id === genresIDs[i]
+        ).name;
+
+        if (theGenre) {
+          translatedArr.push(theGenre)
+        }
+      }
+
+      return translatedArr;
+    } else {
+      translatedArr.push("Nessun genere trovato")
+    }
   }
 
   // funzione per aggiungere le stelline  nell'html
@@ -201,12 +200,12 @@ $(document).ready(function () {
   }
 
   //recupero i primi 5 attori di ogni elemento, e li appendo
-  function appendActors(){
+  function appendActors() {
     var mediaID, mediaType, searchURL;
-    
 
 
-    $(".movie-info").each(function(){
+
+    $(".movie-info").each(function () {
 
       var jQueryContext = $(this);
 
@@ -218,21 +217,22 @@ $(document).ready(function () {
       searchURL = APIURL + mediaType + "/" + mediaID + "/credits";
 
       //uso il tipo di media e l'ID per trovare i credits
-        $.ajax({
+      $.ajax({
         url: searchURL,
         method: "GET",
         data: APIParams,
-        success: function(data){
+        success: function (data) {
 
-          if (data.cast){
-            
+          if (data.cast) {
+
             //riduco a 5  gli elementi
             data.cast.splice(5);
 
             var castArr = [];
 
-            for (var i = 0; i < data.cast.length; i++){
-            castArr.push(data.cast[i].name);
+            for (var i = 0; i < data.cast.length; i++) {
+              //inserisco i nomi degli attori
+              castArr.push(data.cast[i].name);
             }
 
             jQueryContext.find(".actors-cont").text(castArr.join(", "));
@@ -241,10 +241,10 @@ $(document).ready(function () {
         error: function (err) {
           console.log(err)
         }
-        })
+      })
 
-       
-        
+
+
     });
   }
 
