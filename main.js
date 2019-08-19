@@ -305,28 +305,27 @@ $(document).ready(function () {
     for (var i = 0; i < array.length; i++) {
       genresArr.push(array[i].value);
     }
-    console.log(genresArr);
 
-
+    //nascondo tutti gli elementi
     movieBox.addClass("hide");
 
-    movieBox.each(function (i, e) {
+    movieBox.each(function () {
 
-      if ($(this).hasClass("hide")) {
+      //recupero i generi dal DOM
+      genresContent = $(this).find(".genres-cont").text();
 
-        genresContent = $(this).find(".genres-cont").text();
+      for (var i = 0; i < genresArr.length; i++) {
 
-        for (var i = 0; i < genresArr.length; i++) {
-
-          if (genresContent.includes(genresArr[i])) {
-            $(this).removeClass("hide");
-          }
-
+        //se un elemento dell'array è presente, mostro l'elemento
+        if (genresContent.includes(genresArr[i])) {
+          $(this).removeClass("hide");
         }
+
       }
+
     });
 
-    
+
 
   }
 
@@ -363,10 +362,12 @@ $(document).ready(function () {
     $("#fullscreen-container").addClass("hide");
   });
 
-
+  //lego il form alla funzione di filtraggio
   $("#genre-form").submit(function () {
     event.preventDefault();
+
     filterGenres($(this).serializeArray());
+    //nascondo il form
     $("#fullscreen-container").addClass("hide");
   });
 
