@@ -20,19 +20,45 @@
      <!--singolo film-->
   <div class="movie-box">
     <!--locandina-->
-    <img class="movie-img" src="{{imgURL}}" alt="{{title}}" >
+    <img class="movie-img" src="{{imgURL}}" alt="{{title}}">
     <!--info-->
     <ul class="movie-info" data-ID="{{itemID}}" data-media="{{mediaType}}">
-      <li> <strong>Titolo</strong>: {{title}}</li>
-      <li><strong>Titolo originale</strong>: {{originalTitle}}</li>
-      <li><strong>Lingua originale</strong>: <span class="flag-icon flag-icon-{{language}}"></span> </li>
-      <li><strong>Voto</strong>: <span class="score-cont"></span> {{ranking}}/5</li>
-      <li><strong>Generi</strong>: {{genres}}</li>
-      <li><strong>Attori</strong>: <span class="actors-cont"></span></li>
+      <li class="title"><strong>Titolo</strong>: {{title}}</li>
+      <li class="title-og"><strong>Titolo originale</strong>: {{originalTitle}}</li>
+      <li class="language-og"><strong>Lingua originale</strong>: <span class="flag-icon flag-icon-{{language}}"></span> </li>
+      <li class="rating"><strong>Voto</strong>: <span class="score-cont"></span> {{ranking}}/5</li>
+      <li class="genres"><strong>Generi</strong>: <span class="genres-cont">{{genres}}</span></li>
+      <li class="actors"><strong>Attori</strong>: <span class="actors-cont"></span></li>
     </ul>
   </div>
 
   </script>
+
+  <!--template per inserire i generi-->
+  <script id="genre-options-template" type="text/x-handlebars-template">
+    <div class="checkbox">
+      <input type="checkbox"  name="genre" id="{{genreOption}}" value="{{genreOption}}">
+      <label for="{{genreOption}}">{{genreOption}}</label>
+    </div>  
+  </script>
+  
+
+  <!--finestra per selezionare i generi da filtrare-->
+  <div id="fullscreen-container" class="hide">
+
+    <div class="container-filter">
+
+      
+      <!-- form per filtrare i generi -->
+      <form id="genre-form">
+        <!--qui vengono inseriti automaticamente i generi-->
+
+        <!--questo bottone attiva il filtro-->
+        <input type="submit" value="Filtra!" id="filter-genres-button"></input>
+      </form>
+      <button id="container-filter-close">Chiudi finestra</button>
+    </div>
+  </div>
 
   <header>
     <div class="header-container">
@@ -41,9 +67,15 @@
         <!--form per cercare i film-->
         <form>
           <input type="week" name="" id="search-bar" placeholder="inserisci parole chiave">
-          <input type="button" value="Cerca i film!" id="button-search">
+          <input type="button" value="Cerca!" id="button-search">
         </form>
+
+
+        <!--bottone per mostrare e nascondere il filtro generi-->
+        <button id="show-genres-select" disabled="true" >Filtra per genere...</button>
+
       </div>
+
     </div>
   </header>
 

@@ -3,6 +3,7 @@ $(document).ready(function () {
   //pulisco il campo di testo
   $("#search-bar").val("marvel");
 
+
   //chiave API
   var APIKEY = "122f548a0686e7e33947815fd89b1f76";
   //url ricerca film e serie TV
@@ -11,6 +12,7 @@ $(document).ready(function () {
   //conservo la lista dei generi dopo averla recuperata dalla API
   //questo riduce il numero di API call
   var genresCache = [];
+  var filteredGenresCache = [];
 
   //parametri url
   var APIParams = {
@@ -64,9 +66,11 @@ $(document).ready(function () {
   })();
 
   //template handlebars
-  var movieTemplate = Handlebars.compile($("#movie-template").html())
-  var movieContext, resultsArr;
+  var movieTemplate = Handlebars.compile($("#movie-template").html());
+  var movieContext;
 
+  var genreOptionTemplate = Handlebars.compile($("#genre-options-template").html());
+  var genreOptionContext;
 
 
   //funzione per ricevere la lista dalla API; 
@@ -81,10 +85,12 @@ $(document).ready(function () {
       method: "GET",
       data: queryParams,
       success: function (data) {
-        if (data.results) {
+        if (data.results && data.results.length) {
 
           appendList(data.results);
 
+        } else {
+          $("#movies-list").html("La ricerca non ha prodotto alcun risultato");
         }
       },
       error: function (err) {
@@ -157,6 +163,9 @@ $(document).ready(function () {
 
     //aggiungo gli attori
     appendActors()
+
+    //attivo il bottone per filtrare i generi
+    $("#show-genres-select").prop("disabled", false);
   }
 
 
@@ -165,13 +174,17 @@ $(document).ready(function () {
     var theGenre;
     var translatedArr = [];
 
+    if (filteredGenresCache.length == 0) {
+      removeGenresDupes()
+    }
 
-    if (genresIDs && genresCache) {
+    //controllo che sia stato passat un array pieno E chei generi siano stati scaricati
+    if (genresIDs.length && filteredGenresCache.length) {
 
       for (var i = 0; i < genresIDs.length; i++) {
 
         //trovo l'id corrispondente, confrontandolo con la lista di generi pertinente
-        theGenre = genresCache.find(element =>
+        theGenre = filteredGenresCache.find(element =>
           element.id === genresIDs[i]
         ).name;
 
@@ -248,6 +261,75 @@ $(document).ready(function () {
     });
   }
 
+  //funzione per pulire la cache dei generi da duplicati
+  function removeGenresDupes() {
+    if (genresCache) {
+      var lookup = {};
+
+      for (var i = 0; i < genresCache.length; i++) {
+        //se l'elemento non esiste in lookup...
+        if (!lookup[genresCache[i].id]) {
+          //...lo aggiungo così da poterlo confrontare successivamente...
+          lookup[genresCache[i].id] = true;
+          //...e lo aggiungo al mio array di elemtni unici
+          filteredGenresCache.push(genresCache[i]);
+        }
+      }
+
+      appendGenres();
+
+    }
+  }
+
+  //funzione per aggiungere i generi nel DOM
+  function appendGenres() {
+    //controllo che ci siano generi nella cache
+    if (filteredGenresCache) {
+      for (var i = 0; i < filteredGenresCache.length; i++) {
+        genreOptionContext = {
+          genreOption: filteredGenresCache[i].name
+        };
+        $("#genre-form").append(genreOptionTemplate(genreOptionContext));
+      }
+    }
+  }
+
+
+  //funzione per filtrare i film per genere
+  function filterGenres(array) {
+    //conservo un array di generi
+    var genresArr = [];
+    var genresContent;
+    var movieBox = $(".movie-box");
+
+    for (var i = 0; i < array.length; i++) {
+      genresArr.push(array[i].value);
+    }
+    console.log(genresArr);
+
+
+    movieBox.addClass("hide");
+
+    movieBox.each(function (i, e) {
+
+      if ($(this).hasClass("hide")) {
+
+        genresContent = $(this).find(".genres-cont").text();
+
+        for (var i = 0; i < genresArr.length; i++) {
+
+          if (genresContent.includes(genresArr[i])) {
+            $(this).removeClass("hide");
+          }
+
+        }
+      }
+    });
+
+    
+
+  }
+
   //funzione per avviare la ricerca
   $("#button-search").on("click", function () {
 
@@ -271,5 +353,21 @@ $(document).ready(function () {
 
   });
 
+  //funzione per mostrare la finestra di selezione generi da filtrare
+  $("#show-genres-select").on("click", function () {
+    $("#fullscreen-container").removeClass("hide");
+  });
+
+  //questa funzione chiude la finestra di selezione generi
+  $("#container-filter-close").on("click", function () {
+    $("#fullscreen-container").addClass("hide");
+  });
+
+
+  $("#genre-form").submit(function () {
+    event.preventDefault();
+    filterGenres($(this).serializeArray());
+    $("#fullscreen-container").addClass("hide");
+  });
 
 });
