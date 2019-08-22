@@ -188,7 +188,7 @@ $(document).ready(function () {
     }
 
     //controllo che sia stato passat un array pieno E chei generi siano stati scaricati
-    if (genresIDs.length && filteredGenresCache.length) {
+    if (genresIDs.length  && filteredGenresCache.length) {
 
       for (var i = 0; i < genresIDs.length; i++) {
 
@@ -202,10 +202,12 @@ $(document).ready(function () {
         }
       }
 
-      return translatedArr;
+      
     } else {
       translatedArr.push("Nessun genere trovato")
+      
     }
+    return translatedArr;
   }
 
   // funzione per aggiungere le stelline  nell'html
@@ -359,7 +361,7 @@ $(document).ready(function () {
   $("#search-bar").keydown(function () {
 
     if (event.which == 13) {
-
+      console.log("invio");
       event.preventDefault();
 
       if ($("#search-bar").val()) {
@@ -372,7 +374,7 @@ $(document).ready(function () {
 
   //funzione per mostrare la finestra di selezione generi da filtrare
   $("#show-genres-select").click(function () {
-    console.log("click");
+   
     $("#fullscreen-container").removeClass("hide");
   });
 
