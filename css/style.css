@@ -144,6 +144,30 @@
 #main-content{
   background: rgb(58, 55, 55);
   min-height: 80vh;
+  position: relative;
+}
+
+.icon-cont{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.load-icon{
+  color: white;
+  font-size: 10rem;
+  animation-name: spin;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(-360deg)
+  }
+  
 }
 
 #movies-list{
@@ -151,7 +175,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
 }
 
 .movie-box{

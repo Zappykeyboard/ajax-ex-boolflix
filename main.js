@@ -110,8 +110,7 @@ $(document).ready(function () {
     var roundedScore, genres, iteration;
     var posterBaseURL = "https://image.tmdb.org/t/p/w342/";
 
-    //pulisco la lista esistente
-    $("#movies-list").empty();
+    
 
 
     for (var i = 0; i < list.length; i++) {
@@ -155,6 +154,8 @@ $(document).ready(function () {
       }
 
 
+      //nascondo l'icona di caricamento
+      $(".icon-cont").addClass("hide");
 
       //aggiungo il film
       $("#movies-list").append(movieTemplate(movieContext));
@@ -169,6 +170,8 @@ $(document).ready(function () {
 
     //attivo il bottone per filtrare i generi
     $("#show-genres-select").toggleClass("hide");
+
+
   }
 
 
@@ -338,10 +341,13 @@ $(document).ready(function () {
   }
 
   //funzione per avviare la ricerca
-  $("#search-form").submit( function () {
+  $("#search-form").submit(function () {
     event.preventDefault();
     if ($("#search-bar").val()) {
+      //pulisco la lista esistente
+      $("#movies-list").empty();
       retrieveList($("#search-bar").val());
+      $(".icon-cont").removeClass("hide");
     }
   });
 
@@ -361,7 +367,8 @@ $(document).ready(function () {
   });
 
   //funzione per mostrare la finestra di selezione generi da filtrare
-  $("#show-genres-select").on("click", function () {
+  $("#show-genres-select").click(function () {
+    console.log("click");
     $("#fullscreen-container").removeClass("hide");
   });
 

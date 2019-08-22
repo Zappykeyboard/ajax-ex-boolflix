@@ -25,7 +25,8 @@
     <ul class="movie-info" data-ID="{{itemID}}" data-media="{{mediaType}}">
       <li class="title"><strong>Titolo</strong>: {{title}}</li>
       <li class="title-og"><strong>Titolo originale</strong>: {{originalTitle}}</li>
-      <li class="language-og"><strong>Lingua originale</strong>: <span class="flag-icon flag-icon-{{language}}"></span> </li>
+      <li class="language-og"><strong>Lingua originale</strong>: <span class="flag-icon flag-icon-{{language}}"></span>
+      </li>
       <li class="rating"><strong>Voto</strong>: <span class="score-cont"></span> {{ranking}}/5</li>
       <li class="genres"><strong>Generi</strong>: <span class="genres-cont">{{genres}}</span></li>
       <li class="actors"><strong>Attori</strong>: <span class="actors-cont"></span></li>
@@ -41,23 +42,23 @@
       <label for="{{genreOption}}">{{genreOption}}</label>
     </div>  
   </script>
-  
+
 
   <!--finestra per selezionare i generi da filtrare-->
   <div id="fullscreen-container" class="hide">
 
     <div class="container-filter">
-        <button id="container-filter-close"><i class="fas fa-times"></i></button>
+      <button id="container-filter-close"><i class="fas fa-times"></i></button>
 
-      
+
       <!-- form per filtrare i generi -->
-      <form id="genre-form" >
+      <form id="genre-form">
         <!--qui vengono inseriti automaticamente i generi-->
 
         <!--questo bottone attiva il filtro-->
-        <button type="submit"  id="filter-genres-button">Filtra i generi <i class="fas fa-filter"></i></button>
+        <button type="submit" id="filter-genres-button">Filtra i generi <i class="fas fa-filter"></i></button>
       </form>
-      
+
     </div>
   </div>
 
@@ -74,7 +75,7 @@
 
 
         <!--bottone per mostrare e nascondere il filtro generi-->
-        <button id="show-genres-select" disabled="true" class="hide" ><i class="fas fa-filter"></i></button>
+        <button id="show-genres-select" disabled="true" class="hide"><i class="fas fa-filter"></i></button>
 
       </div>
 
@@ -84,6 +85,10 @@
 
 
   <main id="main-content">
+
+    <!--icona per mostrare il caricamento dei film-->
+    <div class="icon-cont hide"><i class="load-icon fas fa-circle-notch"></i></div>
+
     <!--lista di elementi trovati-->
     <div id="movies-list"></div>
   </main>
