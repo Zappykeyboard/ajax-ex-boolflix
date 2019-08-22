@@ -188,7 +188,7 @@ $(document).ready(function () {
     }
 
     //controllo che sia stato passat un array pieno E chei generi siano stati scaricati
-    if (genresIDs.length  && filteredGenresCache.length) {
+    if (genresIDs && filteredGenresCache.length) {
 
       for (var i = 0; i < genresIDs.length; i++) {
 
@@ -202,10 +202,10 @@ $(document).ready(function () {
         }
       }
 
-      
+
     } else {
       translatedArr.push("Nessun genere trovato")
-      
+
     }
     return translatedArr;
   }
@@ -254,12 +254,18 @@ $(document).ready(function () {
 
             var castArr = [];
 
+
             for (var i = 0; i < data.cast.length; i++) {
               //inserisco i nomi degli attori
               castArr.push(data.cast[i].name);
             }
 
-            jQueryContext.find(".actors-cont").text(castArr.join(", "));
+            if (castArr.length > 0) {
+              jQueryContext.find(".actors-cont").text(castArr.join(", "));
+            } else {
+              console.log("nessun attore");
+              jQueryContext.find(".actors-cont").text("Nessun attore trovato");
+            }
           }
         },
         error: function (err) {
@@ -374,7 +380,7 @@ $(document).ready(function () {
 
   //funzione per mostrare la finestra di selezione generi da filtrare
   $("#show-genres-select").click(function () {
-   
+
     $("#fullscreen-container").removeClass("hide");
   });
 
