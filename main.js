@@ -80,6 +80,7 @@ $(document).ready(function () {
   //accetta stringa; ritorna array
   function retrieveList(queryStr) {
 
+
     queryParams.query = queryStr;
     $.extend(queryParams, APIParams);
 
@@ -90,7 +91,12 @@ $(document).ready(function () {
       success: function (data) {
         if (data.results && data.results.length) {
 
-          appendList(data.results);
+          //rimuovo le "persone" dalla lista
+          var filteredArr = data.results.filter(function (e) {
+            return e.media_type !== "person"
+          });
+          console.log("filtered array: ", filteredArr);
+          appendList(filteredArr);
 
         } else {
           //nascondo l'icona di caricamento
@@ -112,8 +118,6 @@ $(document).ready(function () {
   function appendList(list) {
     var roundedScore, genres, iteration;
     var posterBaseURL = "https://image.tmdb.org/t/p/w342/";
-
-
 
 
     for (var i = 0; i < list.length; i++) {
@@ -263,7 +267,7 @@ $(document).ready(function () {
             if (castArr.length > 0) {
               jQueryContext.find(".actors-cont").text(castArr.join(", "));
             } else {
-              console.log("nessun attore");
+              
               jQueryContext.find(".actors-cont").text("Nessun attore trovato");
             }
           }
@@ -288,7 +292,7 @@ $(document).ready(function () {
         if (!lookup[genresCache[i].id]) {
           //...lo aggiungo così da poterlo confrontare successivamente...
           lookup[genresCache[i].id] = true;
-          //...e lo aggiungo al mio array di elemtni unici
+          //...e lo aggiungo al mio array di elementi unici
           filteredGenresCache.push(genresCache[i]);
         }
       }
@@ -297,6 +301,7 @@ $(document).ready(function () {
 
     }
   }
+
 
   //funzione per aggiungere i generi nel DOM
   function appendGenres() {
@@ -367,10 +372,12 @@ $(document).ready(function () {
   $("#search-bar").keydown(function () {
 
     if (event.which == 13) {
-      console.log("invio");
+
       event.preventDefault();
 
       if ($("#search-bar").val()) {
+        //pulisco la lista esistente
+        $("#movies-list").empty();
         retrieveList($("#search-bar").val());
       }
 
