@@ -3,6 +3,9 @@ $(document).ready(function () {
   //pulisco il campo di testo
   $("#search-bar").val("marvel");
 
+  //disabilito il pulsante per filtrare i generi
+  $("#show-genres-select").addClass("hide");
+
 
   //chiave API
   var APIKEY = "122f548a0686e7e33947815fd89b1f76";
@@ -165,7 +168,7 @@ $(document).ready(function () {
     appendActors()
 
     //attivo il bottone per filtrare i generi
-    $("#show-genres-select").prop("disabled", false);
+    $("#show-genres-select").toggleClass("hide");
   }
 
 
@@ -289,7 +292,7 @@ $(document).ready(function () {
         genreOptionContext = {
           genreOption: filteredGenresCache[i].name
         };
-        $("#genre-form").append(genreOptionTemplate(genreOptionContext));
+        $("#genre-form").prepend(genreOptionTemplate(genreOptionContext));
       }
     }
   }
@@ -309,29 +312,34 @@ $(document).ready(function () {
     //nascondo tutti gli elementi
     movieBox.addClass("hide");
 
-    movieBox.each(function () {
+    if (genresArr.length > 0) {
 
-      //recupero i generi dal DOM
-      genresContent = $(this).find(".genres-cont").text();
+      movieBox.each(function () {
 
-      for (var i = 0; i < genresArr.length; i++) {
+        //recupero i generi dal DOM
+        genresContent = $(this).find(".genres-cont").text();
 
-        //se un elemento dell'array è presente, mostro l'elemento
-        if (genresContent.includes(genresArr[i])) {
-          $(this).removeClass("hide");
+        for (var i = 0; i < genresArr.length; i++) {
+
+          //se un elemento dell'array è presente, mostro l'elemento
+          if (genresContent.includes(genresArr[i])) {
+            $(this).removeClass("hide");
+          }
+
         }
 
-      }
-
-    });
-
+      });
+    } else {
+      //se non ci sono generi selezionati, mostro tutti gli elementi
+      movieBox.removeClass("hide");
+    }
 
 
   }
 
   //funzione per avviare la ricerca
-  $("#button-search").on("click", function () {
-
+  $("#search-form").submit( function () {
+    event.preventDefault();
     if ($("#search-bar").val()) {
       retrieveList($("#search-bar").val());
     }
@@ -369,6 +377,7 @@ $(document).ready(function () {
     filterGenres($(this).serializeArray());
     //nascondo il form
     $("#fullscreen-container").addClass("hide");
+
   });
 
 });
