@@ -147,7 +147,7 @@
   position: relative;
 }
 
-.icon-cont{
+.icon-cont, .error-label{
   position: absolute;
   top: 50%;
   left: 50%;
@@ -168,6 +168,11 @@
     transform: rotate(-360deg)
   }
   
+}
+
+.error-label{
+  color: white;
+  font-size: 2rem;
 }
 
 #movies-list{

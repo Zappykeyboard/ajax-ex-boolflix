@@ -93,7 +93,10 @@ $(document).ready(function () {
           appendList(data.results);
 
         } else {
-          $("#movies-list").html("La ricerca non ha prodotto alcun risultato");
+          //nascondo l'icona di caricamento
+          $(".icon-cont").addClass("hide");
+          $(".error-label").removeClass("hide");
+
         }
       },
       error: function (err) {
@@ -110,7 +113,7 @@ $(document).ready(function () {
     var roundedScore, genres, iteration;
     var posterBaseURL = "https://image.tmdb.org/t/p/w342/";
 
-    
+
 
 
     for (var i = 0; i < list.length; i++) {
@@ -346,8 +349,9 @@ $(document).ready(function () {
     if ($("#search-bar").val()) {
       //pulisco la lista esistente
       $("#movies-list").empty();
-      retrieveList($("#search-bar").val());
+      $(".error-label").addClass("hide");
       $(".icon-cont").removeClass("hide");
+      retrieveList($("#search-bar").val());
     }
   });
 
